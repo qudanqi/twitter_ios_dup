@@ -19,9 +19,18 @@ class HomeTableViewController: UITableViewController {
         loadTweet()
         myRefreshControl.addTarget(self, action: #selector(loadTweet), for: .valueChanged)
         tableView.refreshControl = myRefreshControl
+        // automatically set the table cell row height adjust to the content
+        self.tableView.rowHeight = UITableView.automaticDimension
+        // set the initial row height for the cell of tableview
+        self.tableView.estimatedRowHeight = 150
         
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadTweet()
+    }
+    
     @objc func loadTweet(){
         
        numberOfTweet = 20
@@ -87,6 +96,10 @@ class HomeTableViewController: UITableViewController {
         if let imageData = data {
             cell.profileImageView.image = UIImage(data:imageData)
         }
+        //get the information from tweet dictionary element "favorited" and pass it to the function of setFavorite of the cell
+        cell.setFavorite(tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
+        cell.retweeted = tweetArray[indexPath.row]["retweeted"] as! Bool
         return cell
     }
     override func numberOfSections(in tableView: UITableView) -> Int {
